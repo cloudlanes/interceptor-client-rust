@@ -1,0 +1,50 @@
+# CI: builds and tests the library, and runs the shared ion conformance suite against the
+# reference server through interceptor-server's client-conformance template (E13-T002;
+# clients.md § Repo layout, § Shared conformance test suite). Make the `ci` job a required
+# status check in the branch protection of `main`: it passes only when every other job passed.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets --locked -- -D warnings
+      - run: cargo test --locked
+
+  conformance:
+    uses: cloudlanes/interceptor-server/.github/workflows/client-conformance.yml@main
+    permissions:
+      contents: read
+      packages: read
+    with:
+      language: rust
+      command: cargo test --locked --test conformance -- --nocapture
+
+  ci:
+    name: ci
+    if: always()
+    needs: [build, conformance]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: every job passed
+        run: |
+          [ "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}" = "false" ]
