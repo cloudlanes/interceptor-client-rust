@@ -7,3 +7,5 @@
 
 /// The ion ALPN token this client major speaks: `interceptor-client` 0.x and 1.x pin ion major 1.
 pub const ION_ALPN: &str = "interceptor-ion/1";
+
+pub mod retry;

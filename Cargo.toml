@@ -13,6 +13,8 @@ publish = false
 [dev-dependencies]
 # The TLS-stack spike's Ion codec (E13-T004), the version the server uses.
 ion-rs = "1.1"
+# The shared retry-policy vectors (E13-T007).
+serde_json = "1.0"
 rustls = { version = "0.23", default-features = false, features = ["std", "ring"] }
 testcontainers = { version = "0.28", features = ["http_wait_plain"] }
 tokio = { version = "1.47", features = ["io-util", "macros", "net", "rt-multi-thread"] }

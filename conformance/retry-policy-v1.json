@@ -1,0 +1,859 @@
+{
+  "defaults": {
+    "initial_retry_delay_ms": 100,
+    "max_retries_other": 10,
+    "max_retries_send": null,
+    "max_retry_delay_ms": 5000
+  },
+  "spec": "interceptor-docs/client-api/retry-policy.md",
+  "vectors": [
+    {
+      "attempt": {
+        "jitter": 2147483648,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "transient.partition_moving",
+        "endpoint": "ion-2.interceptor-ion.contoso.svc:5674",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "connect_endpoint",
+        "delay_ms": 0,
+        "endpoint": "ion-2.interceptor-ion.contoso.svc:5674"
+      },
+      "name": "redirect.send_reconnects_to_the_endpoint_at_once",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 2147483648,
+        "redirects": 0,
+        "retries": 2
+      },
+      "event": {
+        "code": "transient.partition_moving",
+        "endpoint": "ion://ion-1.interceptor-ion.contoso.svc:5674",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "connect_endpoint",
+        "delay_ms": 0,
+        "endpoint": "ion://ion-1.interceptor-ion.contoso.svc:5674"
+      },
+      "name": "redirect.leader_change_is_handled_like_a_partition_move",
+      "retry": "idempotent",
+      "tag": "messaging.session_receiver.accept_session"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "transient.partition_moving",
+        "endpoint": "ion-2.interceptor-ion.contoso.svc:5674",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "connect_endpoint",
+        "delay_ms": 0,
+        "endpoint": "ion-2.interceptor-ion.contoso.svc:5674"
+      },
+      "name": "redirect.a_once_operation_is_retried_because_the_server_did_not_run_it",
+      "retry": "once",
+      "tag": "messaging.receiver.complete"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 1,
+        "retries": 1
+      },
+      "event": {
+        "code": "transient.partition_moving",
+        "endpoint": "ion-2.interceptor-ion.contoso.svc:5674",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "connect_endpoint",
+        "delay_ms": 100,
+        "endpoint": "ion-2.interceptor-ion.contoso.svc:5674"
+      },
+      "name": "redirect.a_redirect_after_a_redirect_backs_off",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "transient.partition_moving",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "keep",
+        "delay_ms": 50
+      },
+      "name": "redirect.without_an_endpoint_backs_off_on_the_same_connection",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 2147483648,
+        "redirects": 3,
+        "retries": 10
+      },
+      "event": {
+        "code": "transient.partition_moving",
+        "endpoint": "ion-2.interceptor-ion.contoso.svc:5674",
+        "type": "error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "keep",
+        "delay_ms": 0
+      },
+      "name": "redirect.past_max_retries_is_surfaced",
+      "retry": "idempotent",
+      "tag": "messaging.session_receiver.accept_session"
+    },
+    {
+      "attempt": {
+        "jitter": 2147483648,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "transient.partition_moving",
+        "endpoint": "ion-0.ion.west.example.com:443",
+        "type": "connection_error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "connect_endpoint",
+        "delay_ms": 0,
+        "endpoint": "ion-0.ion.west.example.com:443"
+      },
+      "name": "redirect.a_connection_error_with_an_endpoint_reconnects_there_at_once",
+      "retry": "idempotent",
+      "tag": "messaging.receiver.peek"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "transient.server_busy",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "keep",
+        "delay_ms": 50
+      },
+      "name": "busy.first_retry_waits_half_the_initial_delay_at_zero_jitter",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 4294967295,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "transient.server_busy",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "keep",
+        "delay_ms": 99
+      },
+      "name": "busy.first_retry_waits_under_the_initial_delay_at_full_jitter",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 2147483648,
+        "redirects": 0,
+        "retries": 3
+      },
+      "event": {
+        "code": "transient.server_busy",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "keep",
+        "delay_ms": 600
+      },
+      "name": "busy.the_ceiling_doubles_per_retry",
+      "retry": "idempotent",
+      "tag": "messaging.receiver.peek"
+    },
+    {
+      "attempt": {
+        "jitter": 2147483648,
+        "redirects": 0,
+        "retries": 6
+      },
+      "event": {
+        "code": "transient.server_busy",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "keep",
+        "delay_ms": 3750
+      },
+      "name": "busy.the_ceiling_is_capped_at_max_retry_delay",
+      "retry": "idempotent",
+      "tag": "messaging.receiver.peek"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 2000000000
+      },
+      "event": {
+        "code": "transient.server_busy",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "keep",
+        "delay_ms": 2500
+      },
+      "name": "busy.sends_retry_without_limit",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 9
+      },
+      "event": {
+        "code": "transient.server_busy",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "keep",
+        "delay_ms": 2500
+      },
+      "name": "busy.management_retries_up_to_ten_times",
+      "retry": "once",
+      "tag": "management.queues.create"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 10
+      },
+      "event": {
+        "code": "transient.server_busy",
+        "type": "error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "keep",
+        "delay_ms": 0
+      },
+      "name": "busy.management_is_surfaced_after_ten_retries",
+      "retry": "once",
+      "tag": "management.queues.create"
+    },
+    {
+      "attempt": {
+        "jitter": 2147483648,
+        "redirects": 0,
+        "retries": 1
+      },
+      "event": {
+        "code": "transient.server_busy",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "keep",
+        "delay_ms": 150
+      },
+      "name": "busy.a_once_operation_is_retried_because_the_server_did_not_run_it",
+      "retry": "once",
+      "tag": "messaging.receiver.complete"
+    },
+    {
+      "attempt": {
+        "jitter": 2147483648,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "transient.unavailable",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "keep",
+        "delay_ms": 75
+      },
+      "name": "busy.unavailable_backs_off",
+      "retry": "idempotent",
+      "tag": "management.queues.get"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 1
+      },
+      "event": {
+        "code": "transient.timeout",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "keep",
+        "delay_ms": 100
+      },
+      "name": "busy.timeout_backs_off",
+      "retry": "idempotent",
+      "tag": "messaging.session_receiver.accept_session"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "transient.added_later",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "keep",
+        "delay_ms": 50
+      },
+      "name": "busy.a_transient_code_from_a_newer_server_backs_off",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 4294967295,
+        "redirects": 0,
+        "retries": 2
+      },
+      "config": {
+        "initial_retry_delay_ms": 10,
+        "max_retries_other": null,
+        "max_retries_send": 3,
+        "max_retry_delay_ms": 1000
+      },
+      "event": {
+        "code": "transient.server_busy",
+        "type": "error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "keep",
+        "delay_ms": 39
+      },
+      "name": "busy.settings_override_the_defaults",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 3
+      },
+      "config": {
+        "initial_retry_delay_ms": 10,
+        "max_retries_other": null,
+        "max_retries_send": 3,
+        "max_retry_delay_ms": 1000
+      },
+      "event": {
+        "code": "transient.server_busy",
+        "type": "error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "keep",
+        "delay_ms": 0
+      },
+      "name": "busy.a_send_limit_surfaces_the_error",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "endpoint": "ion-2.interceptor-ion.contoso.svc:5674",
+        "reason": "server_draining",
+        "type": "close"
+      },
+      "expect": {
+        "action": "continue",
+        "connection": "connect_endpoint",
+        "delay_ms": 0,
+        "endpoint": "ion-2.interceptor-ion.contoso.svc:5674"
+      },
+      "name": "drain.close_with_an_endpoint_opens_a_connection_there",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "reason": "server_draining",
+        "type": "close"
+      },
+      "expect": {
+        "action": "continue",
+        "connection": "connect_service",
+        "delay_ms": 0
+      },
+      "name": "drain.close_without_an_endpoint_connects_through_the_service",
+      "retry": "once",
+      "tag": "messaging.receiver.complete"
+    },
+    {
+      "attempt": {
+        "jitter": 2147483648,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "draining": true,
+        "endpoint": "ion-2.interceptor-ion.contoso.svc:5674",
+        "type": "connection_lost"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "connect_endpoint",
+        "delay_ms": 0,
+        "endpoint": "ion-2.interceptor-ion.contoso.svc:5674"
+      },
+      "name": "drain.an_idempotent_operation_cut_off_is_retried_at_once_on_the_endpoint",
+      "retry": "idempotent",
+      "tag": "messaging.receiver.peek"
+    },
+    {
+      "attempt": {
+        "jitter": 2147483648,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "draining": true,
+        "type": "connection_lost"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "connect_service",
+        "delay_ms": 0
+      },
+      "name": "drain.a_send_cut_off_is_retried_at_once_through_the_service",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "draining": true,
+        "endpoint": "ion-2.interceptor-ion.contoso.svc:5674",
+        "type": "connection_lost"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "close",
+        "delay_ms": 0
+      },
+      "name": "drain.a_once_operation_cut_off_is_surfaced",
+      "retry": "once",
+      "tag": "messaging.receiver.complete"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "draining": false,
+        "type": "connection_lost"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "connect_service",
+        "delay_ms": 50
+      },
+      "name": "connection.lost_idempotent_operation_reconnects_with_backoff",
+      "retry": "idempotent",
+      "tag": "management.queues.get"
+    },
+    {
+      "attempt": {
+        "jitter": 2147483648,
+        "redirects": 0,
+        "retries": 4
+      },
+      "event": {
+        "draining": false,
+        "type": "connection_lost"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "connect_service",
+        "delay_ms": 1200
+      },
+      "name": "connection.lost_send_reconnects_with_backoff",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "draining": false,
+        "type": "connection_lost"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "close",
+        "delay_ms": 0
+      },
+      "name": "connection.lost_once_operation_is_surfaced",
+      "retry": "once",
+      "tag": "management.queues.create"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 10
+      },
+      "event": {
+        "draining": false,
+        "type": "connection_lost"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "close",
+        "delay_ms": 0
+      },
+      "name": "connection.lost_past_max_retries_is_surfaced",
+      "retry": "idempotent",
+      "tag": "management.queues.get"
+    },
+    {
+      "attempt": {
+        "jitter": 2147483648,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "transient.timeout",
+        "type": "connection_error"
+      },
+      "expect": {
+        "action": "retry",
+        "connection": "connect_service",
+        "delay_ms": 75
+      },
+      "name": "connection.transient_connection_error_reconnects_with_backoff",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "transient.timeout",
+        "type": "connection_error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "close",
+        "delay_ms": 0
+      },
+      "name": "connection.transient_connection_error_surfaces_a_once_operation",
+      "retry": "once",
+      "tag": "messaging.receiver.complete"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "permanent.not_found",
+        "type": "error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "keep",
+        "delay_ms": 0
+      },
+      "name": "permanent.not_found_is_surfaced",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "permanent.lock_lost",
+        "type": "error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "keep",
+        "delay_ms": 0
+      },
+      "name": "permanent.lock_lost_is_surfaced",
+      "retry": "once",
+      "tag": "messaging.receiver.complete"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "permanent.unauthorised",
+        "type": "error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "keep",
+        "delay_ms": 0
+      },
+      "name": "permanent.an_idempotent_operation_is_not_retried",
+      "retry": "idempotent",
+      "tag": "management.queues.get"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 1,
+        "retries": 5
+      },
+      "event": {
+        "code": "permanent.quota_exceeded",
+        "type": "error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "keep",
+        "delay_ms": 0
+      },
+      "name": "permanent.quota_exceeded_is_surfaced_even_mid_retry",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "permanent.added_later",
+        "type": "error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "keep",
+        "delay_ms": 0
+      },
+      "name": "permanent.a_permanent_code_from_a_newer_server_is_surfaced",
+      "retry": "idempotent",
+      "tag": "messaging.receiver.peek"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "permanent.unauthorised",
+        "type": "connection_error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "close",
+        "delay_ms": 0
+      },
+      "name": "permanent.a_connection_error_closes_the_connection",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "permanent.not_supported",
+        "endpoint": "ion-0.ion.west.example.com:443",
+        "type": "connection_error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "close",
+        "delay_ms": 0
+      },
+      "name": "permanent.a_connection_error_with_an_endpoint_is_still_surfaced",
+      "retry": "idempotent",
+      "tag": "messaging.receiver.peek"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "protocol.stream_kind",
+        "type": "error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "close",
+        "delay_ms": 0
+      },
+      "name": "protocol.a_stream_reset_closes_the_connection",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "protocol.malformed_frame",
+        "type": "error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "close",
+        "delay_ms": 0
+      },
+      "name": "protocol.an_idempotent_operation_is_not_retried",
+      "retry": "idempotent",
+      "tag": "messaging.receiver.peek"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "protocol.version_mismatch",
+        "type": "connection_error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "close",
+        "delay_ms": 0
+      },
+      "name": "protocol.a_connection_error_closes_the_connection",
+      "retry": "idempotent",
+      "tag": "management.queues.get"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "bogus",
+        "type": "error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "close",
+        "delay_ms": 0
+      },
+      "name": "protocol.a_code_with_no_known_prefix_is_a_protocol_error",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    },
+    {
+      "attempt": {
+        "jitter": 0,
+        "redirects": 0,
+        "retries": 0
+      },
+      "event": {
+        "code": "protocol.unexpected_frame",
+        "endpoint": "ion-2.interceptor-ion.contoso.svc:5674",
+        "type": "error"
+      },
+      "expect": {
+        "action": "surface",
+        "connection": "close",
+        "delay_ms": 0
+      },
+      "name": "protocol.a_redirect_shaped_protocol_error_is_not_followed",
+      "retry": "by-message-id",
+      "tag": "messaging.sender.send"
+    }
+  ],
+  "version": 1
+}
