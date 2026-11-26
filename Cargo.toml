@@ -9,6 +9,12 @@ repository = "https://github.com/cloudlanes/interceptor-client-rust"
 publish = false
 
 [dependencies]
+# Query and pipeline results as native record batches (E13-T005), the Arrow version the server uses.
+arrow-array = "59"
+arrow-buffer = "59"
+arrow-ipc = "59"
+arrow-schema = "59"
+bytes = "1"
 
 [dev-dependencies]
 # The TLS-stack spike's Ion codec (E13-T004), the version the server uses.

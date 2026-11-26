@@ -1,0 +1,55 @@
+{
+  "batches": [
+    {
+      "first_row": 0,
+      "rows": 10000
+    },
+    {
+      "first_row": 10000,
+      "rows": 0
+    },
+    {
+      "first_row": 10000,
+      "rows": 2345
+    }
+  ],
+  "bytes": 460626,
+  "description": "A query stream as the server frames it (E13-T005). Row values: interceptor-docs/client-api/arrow-streams.md § Conformance rows.",
+  "file": "arrow-query-v1.bin",
+  "frames": 34,
+  "header": "e00100eaeea48183dea086710387be9a8e8f4f70656e517565727953747265616d8871756572795f6964e6818ad38b2101",
+  "max_frame_size": 65536,
+  "query_id": 1,
+  "rows": 12345,
+  "schema": [
+    {
+      "name": "sequence_number",
+      "nullable": false,
+      "type": "int64"
+    },
+    {
+      "name": "enqueued_time_utc",
+      "nullable": false,
+      "type": "timestamp[ns, tz=UTC]"
+    },
+    {
+      "name": "session_id",
+      "nullable": true,
+      "type": "utf8"
+    },
+    {
+      "name": "state",
+      "nullable": false,
+      "type": "dictionary<values=utf8, indices=int8>"
+    },
+    {
+      "name": "body",
+      "nullable": false,
+      "type": "binary"
+    }
+  ],
+  "sha256": "5256830d1758b1d9dc0a16358e95c84b883b6342ba33328b1eadc3034cfb2d34",
+  "stream_id": 2,
+  "stream_kind": 3,
+  "version": 1
+}
